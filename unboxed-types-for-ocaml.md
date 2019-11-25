@@ -35,4 +35,41 @@
  then you have six months of computations, to get the next frame
  out. Of course, there are things that take even longer, if you're
  chosen to do a ping across the Atlantic, that'll expect that to come
- back in about two years time.
+ back in about two years time. So, the point trying to make here is,
+ these numbers cost a lot more orders of magnitude than you might
+ expect. We're not talking about like, one operation being 10% faster
+ than another, we're talking about many many zeros in the difference
+ between the two.
+
+ So this is well if we start talking about memory. So, accessing
+ something which is in the CPU's L1 cache takes a couple of
+ seconds. These will vary a lot by the CPU architecture you're using
+ or which model the processor and so on, but roughly, we're talking a
+ couple of seconds for L1 and the next level of cache a few seconds
+ longer, maybe 20 seconds half a minute of the last level of the
+ cache. But if you don't manage to hit the cache at all, then it's
+ going to be a couple of minutes, in, again, I think multiplied by a
+ billilon, before we can get things back from main memory. If you were
+ really unlucky, then as well as having to go all the way up to main
+ memory, you can get something called a TLB miss, which is the
+ processor not only has to go all the way out to main memory, but also
+ doesn't actually have the table that tells us where in maybe it's
+ supposed to go, so it has to first do some accesses to find that and
+ then do the accesses to actually access the data you wanted. So that
+ can take five or ten minutes on a good day. This is, again, a lot
+ longer than two seconds, we're not talking about like there being a
+ 10% difference depending on whether you hit the cache or not, we're
+ talking about many many times faster or slower. Hapily, this is about
+ as bad as things get these days, if I were given this talk a few
+ years ago, back in the days, when like swapping something out to a
+ rotating disk might have been a reasonable thing that a computer
+ could do sometimes, and that meant that when you access to a variable
+ in memory, if you were really unlucky, you would actually have to
+ wait for this bit of spinning worst to rotation to the right spot,
+ and that wouldn't come back for months. So the point I'm trying to
+ make here is, each of these levels is tens hundreds of times smaller
+ than the previous ones, and if you can make your data very very
+ smaller or can fit in the upper levels, and if it does fit in the
+ upper levels and access to it would be very very much faster than if
+ you have to go down to any of these lower levels to satify any memory
+ requests. So, things will be much faster if they're smaller.
