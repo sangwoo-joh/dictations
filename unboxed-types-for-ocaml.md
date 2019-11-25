@@ -73,3 +73,31 @@
  upper levels and access to it would be very very much faster than if
  you have to go down to any of these lower levels to satify any memory
  requests. So, things will be much faster if they're smaller.
+
+ So, what decides how big your data is, in many ways, the compiler,
+ the implementation of the programming language you're using, it has
+ the job of taking all of the things that you wrote and laying them
+ out somehow in memory. So, the biggest question has to answer is,
+ well, how many bytes in what order should this value that you're
+ representing take up? There are a couple of other ones such are
+ important, CPUs of multiple different types of registers, so there's
+ should this value if we were passing it to a function, would it
+ better to pass it in the integer register or the floating pointer
+ register? If it's an integer should go in one and if it's a floating
+ point you go in the other, if you make the wrong decision you'll
+ waste a lot of time, there's a penalty for moving stuff from one to
+ the other. And in the context of OCaml, which is a garbage-collected
+ language, we also have to worry about when we're representing a
+ value, do we have to tell the garbage collector about this, if we're
+ representing something that is, like, an array or a tuple that's on
+ the garbage collector's heap, the garbage collector must know about
+ all references to that, so that if it needs to mark it or collect it
+ or move it, and those were to look. Whereas if it's just some raw
+ bits of floating point numbers, say, then the garbage collector need
+ not be told about it.
+
+ So, most types, the best way of laying something out depends on the
+ type, and most types have a pretty obvious good layout. If we're
+ like, weave in a way of strings, that should be probably a pointer to
+ some memory hodling all of the array, so we just have to pass over
+ this small pointer or than copying all the array everytime.
