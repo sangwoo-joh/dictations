@@ -100,4 +100,69 @@
  type, and most types have a pretty obvious good layout. If we're
  like, weave in a way of strings, that should be probably a pointer to
  some memory hodling all of the array, so we just have to pass over
- this small pointer or than copying all the array everytime.
+ this small pointer or than copying all the array everytime. If we
+ have an float, that should be represented as like 8 bytes for a
+ double-precision floating-point number should pass for the register,
+ no need to tell the garbage collector about it. If it's a 32-bit int,
+ that only needs 4 bytes. There's a fairly obvious way of laying out
+ each of these different types and they're all fairly straightforward
+ how you would do this.
+
+ So, anyone who's done any sort of performance work on OCaml, anyone
+ who's trying to make an OCaml program run quickly, will know that
+ these obvious good layouts are not at all how OCaml lays out in 32s
+ or floating-point numbers, it does something much, much
+ worse. Integers and floats all get their own separate little
+ allocation of a block that's 16 or 24 bytes long, which just contains
+ this extra value, and it only exists to contains this value, and the
+ pointer to this block takes up just as much space as the value that
+ you're trying to represent. So, why on earth does it do this? This is
+ not a system that was designed by, like people who didn't know what
+ they're doing, and still they did this. And, they did this because of
+ a really tricky problem, which is actually what this talk is mostly
+ about, how do we lay out an unknown type? If we know that was 32,
+ there's an obvious way of doing that, we know it's a float, there's
+ an obvious way of doing that, but if we just don't know about what
+ the type is, what are we supposed to do to lay it out?
+
+ So, there are two fairly obvious solutions. First of all, this is
+ actually a more common problem than you might imagine. You regularly
+ find yourself with a program which contains some unknown types. The
+ simplest example is you writing a polymorphic function like
+ `map`. `map` takes a list and the elements of the list are of any
+ possible type, and so when we're type checking or compiling this
+ function, we do not know what type the list elements are, because
+ this function has to work for any possible type. But writing
+ polymorphic functions is not like a thing that you like there are
+ many of them, but most lots of functions are just written first
+ order, even in cases where we're not writing polymorphic functions
+ whenever we use a module that defines an abstract type, we still have
+ the same problem. If `Location.t`, there's a module called `Location`
+ which defines a type called `t`, then when we're compiling this, we
+ don't know what the type is. This is still, we need to compile in the
+ presence of an unknown type. We need to know how these values are
+ supposed to laid out, even though we don't know what the type is.
+
+ So, there are two standard solutions to this. Number one, we can lay
+ out all of the types in exactly the same way, which is the old Lisp
+ approach, and then, it doesn't really matter how we're going to lay
+ types out, because it doesn't really matter that a type is unknown
+ because we're all going to be laid out the same way anyway. Number
+ two, is we can delay making any choices until we actually know what
+ the type is,which is the C++ version that like when you write a
+ template in C++, it doesn't actually generate any code to compile
+ anything, it waits until the template is used as a particular
+ type. Unfortunately, both of these are horrible in different
+ ways. The horribleness of Lisp one is the inefficiency of the
+ representations you end up with. You have a particular uniform
+ representation, in OCaml that representation is there's machine words
+ of 64 bits long and if the low bit is zero it's a pointer to
+ something the garbage collector understands, if the low bit is one
+ then it's just an integer. And for things which fit into this, which
+ are basically pointers to garbage collector stuffs or integers, then
+ this is a reasonably efficient, but anything that doesn't fit into
+ this, like for instance, a 64 bit float which might actually end in
+ zero will not be a pointer, then those have to be encoded via some
+ more roundabout way, you end up having to ? what OCaml does is encode
+ them as a pointer to a block that was invented it just so that it
+ could hold this one thing.
