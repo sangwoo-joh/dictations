@@ -13,8 +13,8 @@
  many ways to like, a name in an equation. Right? You know, you name
  your variables in equations, you name your variables in your program,
  those things are many ways very similar to each other. So, in a
- dynamically typed language, values rather have types, because there
- are different kinds of things your language deals with, but variables
+ dynamically typed language, values rather have types, because they're
+ different kinds of things your language deals with, but variables
  don't. In a statically typed langauge, the variables themselves also
  have types, which is to say, at the time your program is written, the
  compiler can do a kind of static analysis, get look at your code, and
