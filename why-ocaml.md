@@ -124,3 +124,19 @@
  that's easier to reason about is good. But it's not you're trying to
  ban effects from your program. That's sort of at the heart of what
  you wanna do.
+
+ There are two orthogonal things you can do in your programming
+ language that make composition easier. One is to have good forms of
+ abstraction. But having effects in your language has communication
+ channels to get out of it in a fundamental way. John Carmack is an
+ excellent C++ programmer, fairly legendary guy in game industry. If
+ you listen to the way he talked about programming, he argues very
+ strongly in favor of immutability. Avoiding effects as a way of
+ making your program easier to decompose. This is like faily standard
+ advice for people building programs in almost any
+ language. Immutability simplifies things. Composibility is about more
+ than just avoiding mutation. Another example is concurrency. Races
+ are really hard to think about in the context of mutable data, and
+ basically trivial in the absence of it. Because the lack of mutation
+ means there's no intereference when things are interleaved each
+ other.
